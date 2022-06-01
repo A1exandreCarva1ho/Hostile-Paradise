@@ -11,6 +11,9 @@ public class ControleMira : MonoBehaviour
     public bool grab; // determinará se o objeto é pegável ou não pra mudar o simbolo da crosshair
 
     float distancia;
+
+    int tamanho_grupo = 0;
+
     void Update(){
 
         if(selecaoNormal != null && selecaoNormal.CompareTag("item")){
@@ -44,10 +47,32 @@ public class ControleMira : MonoBehaviour
                             grab = false;
                         }
                         
-                   // }
-                
+                   // } 
             }
+
+            
             selecaoNormal = selecao;
+
+            if(selecao.CompareTag("nativo")){  
+                if(Input.GetKeyUp(KeyCode.E)){
+                    if (hit.transform.gameObject.GetComponent<ControleNativo>().tem_grupo == false){
+                    hit.transform.gameObject.GetComponent<ControleNativo>().Recrutar(tamanho_grupo);
+                    tamanho_grupo++;
+                    }
+                }
+
+            }
+        }
+
+        if(Physics.Raycast(raio, out hit, 50.0f, mascara)){
+        var selecao = hit.transform;
+            if(selecao.CompareTag("inimigo")){
+                if(Input.GetKeyUp(KeyCode.E)){
+                    GameObject inimigo = hit.transform.gameObject;
+                    GameObject coracao = inimigo.transform.Find("nucleo").gameObject;
+                        this.gameObject.GetComponent<Agrupamento>().AtaqueEmGrupo(coracao);                     
+                }
+            }
         }
 
     }
